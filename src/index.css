@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Paleta principal ChatCare */
+  --color-primary:           #2f75ba;
+  --color-on-primary:        #ffffff;
+  --color-primary-container: #dbeeff;
+  --color-on-primary-container: #0d3a6b;
+  --color-inverse-primary:   #78b3cc;
+
+  /* Secundarios */
+  --color-secondary:            #1a6a8e;
+  --color-on-secondary:         #ffffff;
+  --color-secondary-container:  #cff0ff;
+  --color-on-secondary-container: #003547;
+
+  --color-tertiary:             #78b3cc;
+  --color-on-tertiary:          #ffffff;
+  --color-tertiary-container:   #c5e7f7;
+  --color-on-tertiary-container:#003547;
+
+  /* Superficies */
+  --color-surface:                    #ffffff;
+  --color-surface-dim:                #d8e4f0;
+  --color-surface-bright:             #f6fbff;
+  --color-surface-container-lowest:   #ffffff;
+  --color-surface-container-low:      #f0f7fd;
+  --color-surface-container:          #e4f0f8;
+  --color-surface-container-high:     #d8e8f4;
+  --color-surface-container-highest:  #cce0ee;
+
+  /* Texto sobre superficies */
+  --color-on-surface:           #0d1b27;
+  --color-on-surface-variant:   #3f5869;
+  --color-inverse-surface:      #0d1b27;
+  --color-inverse-on-surface:   #f0f7fd;
+
+  /* Contornos */
+  --color-outline:          #6a8fa8;
+  --color-outline-variant:  #bdd5e7;
+  --color-surface-tint:     #2f75ba;
+
+  /* Error */
+  --color-error:              #ba1a1a;
+  --color-on-error:           #ffffff;
+  --color-error-container:    #ffdad6;
+  --color-on-error-container: #410002;
+
+  /* Fondo general */
+  --color-background:    #f0f7fd;
+  --color-on-background: #0d1b27;
+  --color-surface-variant: #ddedf7;
+
+  /* Tokens de primary fixed */
+  --color-primary-fixed:          #dbeeff;
+  --color-primary-fixed-dim:      #a3cad4;
+  --color-on-primary-fixed:       #0d3a6b;
+  --color-on-primary-fixed-variant: #1a5a96;
+
+  /* Tokens de secondary fixed */
+  --color-secondary-fixed:          #cff0ff;
+  --color-secondary-fixed-dim:      #9bd6ef;
+  --color-on-secondary-fixed:       #003547;
+  --color-on-secondary-fixed-variant: #1a5a70;
+
+  /* Radios */
+  --radius-sm:  0.25rem;
+  --radius-md:  0.5rem;
+  --radius-lg:  0.75rem;
+  --radius-xl:  1rem;
+  --radius-2xl: 1.5rem;
+}
+
+/* Animación de entrada del toast */
+@keyframes slideDown {
+  from { transform: translate(-50%, -120%); opacity: 0; }
+  to   { transform: translate(-50%, 0);     opacity: 1; }
+}
+
+/* Barra de progreso del toast */
+@keyframes shrink {
+  from { width: 100%; }
+  to   { width: 0%;   }
+}
