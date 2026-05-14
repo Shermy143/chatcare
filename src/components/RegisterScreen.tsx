@@ -13,17 +13,17 @@ interface Plan {
 }
 
 export default function RegisterScreen({ onNavigate }: Props) {
-  const [nombre, setNombre]       = useState('');
-  const [apellido, setApellido]   = useState('');
-  const [cedula, setCedula]       = useState('');
-  const [telefono, setTelefono]   = useState('');
-  const [email, setEmail]         = useState('');
-  const [password, setPassword]   = useState('');
-  const [planId, setPlanId]       = useState('');
-  const [showPass, setShowPass]   = useState(false);
-  const [planes, setPlanes]       = useState<Plan[]>([]);
-  const [loading, setLoading]     = useState(false);
-  const [error, setError]         = useState('');
+  const [nombre, setNombre] = useState('');
+  const [apellido, setApellido] = useState('');
+  const [cedula, setCedula] = useState('');
+  const [telefono, setTelefono] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [planId, setPlanId] = useState('');
+  const [showPass, setShowPass] = useState(false);
+  const [planes, setPlanes] = useState<Plan[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [showToast, setShowToast] = useState(false);
 
   // Carga los planes disponibles al montar
@@ -98,7 +98,7 @@ export default function RegisterScreen({ onNavigate }: Props) {
             <p className="text-xs opacity-70">Redirigiendo al inicio de sesión…</p>
           </div>
           {/* Barra de progreso */}
-          <div className="absolute bottom-0 left-0 h-0.5 bg-primary rounded-full animate-[shrink_2.5s_linear_forwards]" style={{width:'100%'}} />
+          <div className="absolute bottom-0 left-0 h-0.5 bg-primary rounded-full animate-[shrink_2.5s_linear_forwards]" style={{ width: '100%' }} />
         </div>
       )}
 
@@ -174,7 +174,7 @@ export default function RegisterScreen({ onNavigate }: Props) {
               <label htmlFor="telefono" className="block text-sm font-medium text-on-surface-variant mb-1">Teléfono</label>
               <div className="relative">
                 <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-outline-variant pointer-events-none" />
-                <input id="telefono" type="tel" value={telefono} onChange={(e) => setTelefono(e.target.value)} placeholder="+1 555 000 0000"
+                <input id="telefono" type="tel" value={telefono} onChange={(e) => setTelefono(e.target.value)} placeholder="+593 00 000 0000"
                   className="w-full rounded-xl border border-outline-variant bg-surface-container-low pl-10 pr-4 py-3 text-on-surface focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder:text-outline" />
               </div>
             </div>
@@ -224,24 +224,24 @@ export default function RegisterScreen({ onNavigate }: Props) {
                       type="button"
                       onClick={() => setPlanId(p.id)}
                       className={`w-full text-left rounded-xl border-2 p-4 transition-all duration-200 flex items-start gap-3
-                        ${ isSelected
+                        ${isSelected
                           ? 'border-primary bg-primary-container/60 shadow-sm shadow-primary/10'
                           : 'border-outline-variant bg-surface-container-low hover:border-primary/40 hover:bg-surface-container'
                         }`}
                     >
                       {/* Icono */}
                       <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 mt-0.5 transition-colors
-                        ${ isSelected ? 'bg-primary text-on-primary' : 'bg-surface-container-highest text-on-surface-variant'}`}>
+                        ${isSelected ? 'bg-primary text-on-primary' : 'bg-surface-container-highest text-on-surface-variant'}`}>
                         <Shield className="w-5 h-5" />
                       </div>
 
                       {/* Contenido */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className={`font-semibold text-sm ${ isSelected ? 'text-primary' : 'text-on-surface'}`}>
+                          <span className={`font-semibold text-sm ${isSelected ? 'text-primary' : 'text-on-surface'}`}>
                             {p.nombre}
                           </span>
-                          <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${ badgeColors[i] ?? badgeColors[0]}`}>
+                          <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${badgeColors[i] ?? badgeColors[0]}`}>
                             {badges[i] ?? 'Plan'}
                           </span>
                         </div>
@@ -249,7 +249,7 @@ export default function RegisterScreen({ onNavigate }: Props) {
                       </div>
 
                       {/* Checkmark */}
-                      <CheckCircle2 className={`w-5 h-5 shrink-0 mt-0.5 transition-all ${ isSelected ? 'text-primary opacity-100' : 'opacity-0'}`} />
+                      <CheckCircle2 className={`w-5 h-5 shrink-0 mt-0.5 transition-all ${isSelected ? 'text-primary opacity-100' : 'opacity-0'}`} />
                     </button>
                   );
                 })}
