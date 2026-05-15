@@ -32,7 +32,7 @@ export interface PatientContext {
     copago_porcentaje: number;
     requiere_referido: boolean;
   }>;
-  hospitales: Array<{ id: string; nombre: string }>;
+  hospitales: Array<{ id: string; nombre: string; telefono?: string; direccion?: string; ciudad?: string }>;
 }
 
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';

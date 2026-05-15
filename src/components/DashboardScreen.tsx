@@ -134,22 +134,20 @@ export default function DashboardScreen({ userId, onNavigate }: Props) {
       <main className="flex-1 flex flex-col h-full overflow-hidden bg-background">
         <div className="w-full max-w-[1280px] mx-auto h-full flex flex-col p-4 md:p-8">
 
-          {/* Tab: Chat Médico */}
-          {activeTab === 'chat' && (
-            <>
-              <div className="mb-4 md:mb-6 shrink-0">
-                <h1 className="text-2xl md:text-3xl font-bold text-on-background">Consulta Activa</h1>
-                <p className="text-on-surface-variant mt-1 text-sm md:text-base">
-                  Tu asistente médico de IA está listo para ayudarte.
-                </p>
-              </div>
-              <Chat userId={userId} />
-            </>
-          )}
+          {/* Tab: Chat Médico — siempre montado para preservar la conversación */}
+          <div className={activeTab === 'chat' ? 'flex flex-col h-full' : 'hidden'}>
+            <div className="mb-4 md:mb-6 shrink-0">
+              <h1 className="text-2xl md:text-3xl font-bold text-on-background">Consulta Activa</h1>
+              <p className="text-on-surface-variant mt-1 text-sm md:text-base">
+                Tu asistente médico de IA está listo para ayudarte.
+              </p>
+            </div>
+            <Chat userId={userId} />
+          </div>
 
           {/* Tab: Mi Seguro */}
           {activeTab === 'seguro' && (
-            <div className="flex flex-col gap-4">
+            <div className="flex-1 overflow-y-auto flex flex-col gap-4">
               <h1 className="text-2xl md:text-3xl font-bold text-on-background mb-2">Mi Seguro</h1>
               {profile ? (
                 <div className="bg-surface rounded-2xl border border-outline-variant shadow-sm p-6 flex flex-col gap-4">
@@ -179,17 +177,21 @@ export default function DashboardScreen({ userId, onNavigate }: Props) {
 
           {/* Tab: Hospitales */}
           {activeTab === 'hospitales' && (
-            <HospitalesList />
+            <div className="flex-1 overflow-y-auto">
+              <HospitalesList />
+            </div>
           )}
 
           {/* Tab: Consultas */}
           {activeTab === 'consultas' && (
-            <ConsultasView userId={userId} />
+            <div className="flex-1 overflow-y-auto">
+              <ConsultasView userId={userId} />
+            </div>
           )}
 
           {/* Tab: Perfil */}
           {activeTab === 'perfil' && (
-            <div className="flex flex-col gap-4">
+            <div className="flex-1 overflow-y-auto flex flex-col gap-4">
               <h1 className="text-2xl md:text-3xl font-bold text-on-background mb-2">Mi Perfil</h1>
               {profile ? (
                 <div className="bg-surface rounded-2xl border border-outline-variant shadow-sm p-6 flex flex-col gap-3">

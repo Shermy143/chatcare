@@ -15,7 +15,7 @@ interface UIMessage extends ChatMessage {
   cobertura?: CoverageInfo | null;
 }
 
-type CitaStep = 'idle' | 'esperando_fecha' | 'esperando_jornada' | 'esperando_hora';
+type CitaStep = 'idle' | 'confirmando_hospital' | 'esperando_fecha' | 'esperando_jornada' | 'esperando_hora';
 
 interface CitaDraft {
   hospital_id:     string;
@@ -39,9 +39,12 @@ function buildFechaOpciones(): Opcion[] {
   return Array.from({ length: 14 }, (_, i) => {
     const d = new Date();
     d.setDate(d.getDate() + i + 1);
+    const yyyy = d.getFullYear();
+    const mm   = String(d.getMonth() + 1).padStart(2, '0');
+    const dd   = String(d.getDate()).padStart(2, '0');
     return {
       etiqueta: `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]}`,
-      valor:    d.toISOString().split('T')[0],
+      valor:    `${yyyy}-${mm}-${dd}`,
     };
   });
 }
@@ -73,10 +76,11 @@ export default function Chat({ userId }: Props) {
   const [loading, setLoading]               = useState(false);
   const [context, setContext]               = useState<PatientContext | null>(null);
   const [contextError, setContextError]     = useState(false);
-  const [activeOpciones, setActiveOpciones] = useState<Opcion[] | null>(null);
-  const [citaStep, setCitaStep]             = useState<CitaStep>('idle');
-  const [citaDraft, setCitaDraft]           = useState<Partial<CitaDraft>>({});
-  const [lastEspecialidad, setLastEspecialidad] = useState('');
+  const [activeOpciones, setActiveOpciones]       = useState<Opcion[] | null>(null);
+  const [citaStep, setCitaStep]                   = useState<CitaStep>('idle');
+  const [citaDraft, setCitaDraft]                 = useState<Partial<CitaDraft>>({});
+  const [lastEspecialidad, setLastEspecialidad]   = useState('');
+  const [lastHospitalOpciones, setLastHospitalOpciones] = useState<Opcion[] | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   // Carga el contexto de cobertura del paciente
@@ -97,7 +101,7 @@ export default function Chat({ userId }: Props) {
 
       const { data: hospitales } = await supabase
         .from('hospitales')
-        .select('id, nombre')
+        .select('id, nombre, telefono, direccion, ciudad')
         .eq('red_activa', true);
 
       const plan = (profile.planes as unknown as { nombre: string } | null)?.nombre ?? 'Sin plan';
@@ -111,8 +115,11 @@ export default function Chat({ userId }: Props) {
           requiere_referido: c.requiere_referido,
         })),
         hospitales: (hospitales ?? []).map(h => ({
-          id:     h.id     as string,
-          nombre: h.nombre as string,
+          id:        h.id        as string,
+          nombre:    h.nombre    as string,
+          telefono:  h.telefono  as string | undefined,
+          direccion: h.direccion as string | undefined,
+          ciudad:    h.ciudad    as string | undefined,
         })),
       });
     }
@@ -145,17 +152,39 @@ export default function Chat({ userId }: Props) {
 
   // Maneja la selección de un botón de respuesta rápida
   async function handleOpcionSelect(opcion: Opcion) {
+    const currentOpciones = activeOpciones; // capturar antes de limpiar
     setActiveOpciones(null);
     setMessages(prev => [...prev, { role: 'user', content: opcion.etiqueta }]);
 
     // Hospital seleccionado (tiene id y step está en idle)
     if (citaStep === 'idle' && opcion.id) {
+      if (currentOpciones) setLastHospitalOpciones(currentOpciones);
       setCitaDraft({ hospital_id: opcion.id, hospital_nombre: opcion.valor, especialidad: lastEspecialidad });
-      setCitaStep('esperando_fecha');
+      setCitaStep('confirmando_hospital');
+      const h = context?.hospitales.find(h => h.id === opcion.id);
+      const detalle = (h?.direccion || h?.telefono)
+        ? `\n📍 ${[h?.direccion, h?.ciudad].filter(Boolean).join(', ')}\n📞 ${h?.telefono ?? 'No disponible'}`
+        : '';
       addBotMessage(
-        `Perfecto, ${opcion.valor} es una excelente opción. ¿Qué fecha prefieres para tu cita?`,
-        buildFechaOpciones()
+        `📋 **${opcion.valor}**${detalle}\n\n¿Deseas agendar tu cita en este hospital?`,
+        [
+          { etiqueta: '✅ Sí, agendar aquí',       valor: 'confirmar' },
+          { etiqueta: '🔄 Ver otros hospitales',    valor: 'cambiar'   },
+        ]
       );
+      return;
+    }
+
+    // Confirmación o cambio de hospital
+    if (citaStep === 'confirmando_hospital') {
+      if (opcion.valor === 'confirmar') {
+        setCitaStep('esperando_fecha');
+        addBotMessage('¿Qué fecha prefieres para tu cita?', buildFechaOpciones());
+      } else {
+        setCitaStep('idle');
+        setCitaDraft({});
+        addBotMessage('Sin problema. ¿En cuál de estos hospitales prefieres atenderte?', lastHospitalOpciones);
+      }
       return;
     }
 
