@@ -25,7 +25,7 @@ interface CitaDraft {
   jornada?:        string;
 }
 
-interface Props { userId: string; }
+interface Props { userId: string; resetKey?: number; }
 
 const WELCOME: UIMessage = {
   role:    'assistant',
@@ -70,7 +70,7 @@ const JORNADA_LABEL: Record<string, string> = {
   mañana: 'mañana 🌅', tarde: 'tarde ☀️', noche: 'noche 🌙',
 };
 
-export default function Chat({ userId }: Props) {
+export default function Chat({ userId, resetKey }: Props) {
   const [messages, setMessages]             = useState<UIMessage[]>([WELCOME]);
   const [input, setInput]                   = useState('');
   const [loading, setLoading]               = useState(false);
@@ -125,6 +125,17 @@ export default function Chat({ userId }: Props) {
     }
     loadContext();
   }, [userId]);
+
+  useEffect(() => {
+    if (!resetKey) return;
+    setMessages([WELCOME]);
+    setInput('');
+    setActiveOpciones(null);
+    setCitaStep('idle');
+    setCitaDraft({});
+    setLastEspecialidad('');
+    setLastHospitalOpciones(null);
+  }, [resetKey]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });

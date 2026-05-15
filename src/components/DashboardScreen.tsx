@@ -22,6 +22,7 @@ interface Profile {
 export default function DashboardScreen({ userId, onNavigate }: Props) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeTab, setActiveTab]           = useState<Tab>('chat');
+  const [chatKey, setChatKey]               = useState(0);
   const [profile, setProfile]               = useState<Profile | null>(null);
 
   // Carga el perfil del usuario autenticado
@@ -113,7 +114,7 @@ export default function DashboardScreen({ userId, onNavigate }: Props) {
             Cerrar sesión
           </button>
           <button
-            onClick={() => { setActiveTab('chat'); setMobileMenuOpen(false); }}
+            onClick={() => { setChatKey(k => k + 1); setActiveTab('chat'); setMobileMenuOpen(false); }}
             className="w-full bg-primary text-on-primary font-medium text-sm py-3 rounded-xl hover:bg-on-primary-fixed-variant transition-colors flex items-center justify-center gap-2 shadow-sm active:scale-[0.98]"
           >
             <Plus className="w-5 h-5" />
@@ -142,7 +143,7 @@ export default function DashboardScreen({ userId, onNavigate }: Props) {
                 Tu asistente médico de IA está listo para ayudarte.
               </p>
             </div>
-            <Chat userId={userId} />
+            <Chat userId={userId} resetKey={chatKey} />
           </div>
 
           {/* Tab: Mi Seguro */}
